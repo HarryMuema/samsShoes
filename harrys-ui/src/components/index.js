@@ -1,4 +1,3 @@
 import NavBar from "./NavBar"
-export {
-    NavBar,
-}
+import ItemCard from "./ItemCard";
+export { NavBar, ItemCard };

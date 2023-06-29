@@ -1,78 +1,92 @@
 import { IoMdMenu } from 'react-icons/io';
-import { BsSuitHeart, BsCart4 } from "react-icons/bs";
-import { RiSearch2Line } from 'react-icons/ri';
-import { HiArrowNarrowRight } from 'react-icons/hi';
-import { NavLink } from 'react-router-dom';
-
-const NavDropDownItem = ({ icon, title, children, url, onClick }) => {
-  return (
-    <>
-      <div className="">{icon}</div>
-      <Link to={url} className="flex flex-col gap-1" onClick={onClick}>
-        <p
-          to={url}
-          className="flex gap-2 items-center font-bold text-primaryText text-[15px] "
-        >
-          {title} <HiArrowNarrowRight />
-        </p>
-        <p className="text-[14px] text-secondaryText font-normal">
-          {children}
-        </p>
-      </Link>
-    </>
-  );
-};
-
-const NavDropDown = ({ data, showNav, onClick }) => {
-  return (
-    <div
-      className={`bg-primaryBackgroundWhite  w-full ${
-        showNav ? "flex" : "hidden"
-      } lg:hidden lg:group-hover:flex flex-col gap-2 font-semibold lg:text-base hover:text-primaryButton cursor-default w-full `}
-    >
-      <div className=" bg-gray-100 lg:group-flex lg:bg-primaryBackgroundWhite w-full flex flex-wrap justify-start gap-4 lg:absolute lg:top-20 lg:right-0 lg:left-0 py-4 px-[20px] lg:px-[80px] bg-tranparent  lg:shadow-lg lg:shadow-red-100/20 border-t-[1px] border-gray-200/40">
-        <ul className="max-w-[1060px] mx-auto lg:group-flex w-full flex flex-wrap justify-start gap-4">
-          {data?.map(({ id, icon, title, link, description }) => (
-            <li className="flex gap-4 w-full sm:max-w-[300px]" key={id}>
-              <NavDropDownItem
-                icon={icon}
-                title={title}
-                url={link}
-                onClick={onClick}
-              >
-                {description}
-              </NavDropDownItem>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-};
+import { BsSuitHeart, BsCart4, BsArrowRightShort } from "react-icons/bs";
+import { MdOutlineCompareArrows } from "react-icons/md";
+import { RiSearch2Line } from "react-icons/ri";
+import { Link, useNavigate } from "react-router-dom";
+import { navBarData } from "../data";
+import { AiOutlineLogin } from "react-icons/ai";
+import { useState } from "react";
+import ItemCard from "./ItemCard";
 
 const NavBar = () => {
+  const navigate = useNavigate();
+  const [isActive, setIsActive] = useState(false);
   return (
-    <nav className="flex items-center h-[55px] bg-[#2c3640] shadow-sm shadow-[#2c3640] -mx-[20px] ">
+    <nav className="flex items-center h-[55px] bg-[#2c3640] relative shadow-sm shadow-[#2c3640] -mx-[20px] ">
       <div className="logo-container px-[20px] bg-white h-full top-[-1px] hover:shadow-lg flex items-center justify-center">
-        <h1 className="logo  text-lgeb tracking-[2px] sm:tracking-[10px]">
+        <Link
+          to={"."}
+          onClick={() => setIsActive(false)}
+          className="logo  text-lgeb tracking-[2px] sm:tracking-[10px]"
+        >
           HAJIME
-        </h1>
+        </Link>
       </div>
       <div className="flex justify-between p-[5px] w-full h-full items-center">
-        <NavLink to={'/'}>
-          {({isActive, isPending}) => (
-            <span className={isActive? 'active' : ''}>
-              <IoMdMenu size={24} color={"#cacfe2"} />
-              <NavDropDown/>
-            </span>
-          )}
-        </NavLink>
+        <Link onClick={() => setIsActive(!isActive)}>
+          <IoMdMenu size={24} color={"#cacfe2"} />
+          <span
+            className={isActive ? "flex hover:flex" : "hidden hover:hidden"}
+          >
+            <div className="absolute w-full bg-white top-[100%] left-0 px-[20px] py-[40px] drop-shadow-lg">
+              <section className="flex justify-center items-start flex-col">
+                <div className="flex items-center gap-4 mb-[10px]">
+                  {navBarData.account.icon}
+                  <h1 className="text-lgb uppercase">
+                    {navBarData.account.title}
+                  </h1>
+                </div>
+                <div className="border-[1px] border-[#cacfe2] w-[120px] mb-[30px]"></div>
+                <div className="flex gap-4 mx-[10px] mb-[40px]">
+                  <p className="text-basel">{navBarData.account.description}</p>
+                </div>
+                <div className="flex items-center gap-6">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate("/registration", {
+                        replace: false,
+                      });
+                    }}
+                    className="flex items-center gap-1 bg-[#36b160] p-[10px] text-white text-smsb tracking-[5px] rounded-[5px]"
+                  >
+                    Continue
+                    <BsArrowRightShort size={25} color={"white"} />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate("./login");
+                    }}
+                    className="flex gap-1 items-center text-baser"
+                  >
+                    login
+                    <AiOutlineLogin size={25} color={"#2c3640"} />
+                  </button>
+                </div>
+              </section>
+              <section className="flex justify-start px-[20px] items-center bg-[#2c3640] -mx-[20px]">
+                <div className="flex py-[20px] flex-col">
+                  <h1 className="text-white uppercase text-lgb mb-[10px]">
+                    Most viewed
+                  </h1>
+                  <div className="border-[1px] border-[#cacfe2] w-[60px] mb-[30px]"></div>
+                  <div className="flex justify-center items-center relative">
+                    <ItemCard />
+                  </div>
+                </div>
+              </section>
+              {/* {navBarData.map((navItem, index) => ( */}
+              {/* ))} */}
+            </div>
+          </span>
+        </Link>
         <BsSuitHeart size={24} color={"#cacfe2"} />
         <RiSearch2Line size={24} color={"#cacfe2"} />
         <BsCart4 size={24} color={"#cacfe2"} />
       </div>
     </nav>
   );
-}
+};
 
 export default NavBar
